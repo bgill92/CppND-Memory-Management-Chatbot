@@ -1,8 +1,12 @@
 #include "graphnode.h"
 #include "graphedge.h"
 
+// For debugging
+#include <iostream>
+
 GraphEdge::GraphEdge(int id)
 {
+	std::cout << "In GraphEdge Constructor" << std::endl;
     _id = id;
 }
 

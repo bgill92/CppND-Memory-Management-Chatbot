@@ -1,8 +1,12 @@
 #include "graphedge.h"
 #include "graphnode.h"
 
+// For debugging
+#include <iostream>
+
 GraphNode::GraphNode(int id)
 {
+    std::cout << "In GraphNode Constructor" << std::endl;
     _id = id;
 }
 
@@ -11,7 +15,9 @@ GraphNode::~GraphNode()
     //// STUDENT CODE
     ////
 
-    delete _chatBot; 
+    std::cout << "In GraphNode Destructor" << std::endl;
+
+    // delete _chatBot; 
 
     ////
     //// EOF STUDENT CODE

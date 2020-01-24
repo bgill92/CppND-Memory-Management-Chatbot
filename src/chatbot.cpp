@@ -8,9 +8,14 @@
 #include "graphedge.h"
 #include "chatbot.h"
 
+// For debugging
+#include <iostream>
+
 // constructor WITHOUT memory allocation
 ChatBot::ChatBot()
 {
+    std::cout << "In ChatBot Constructor (with no memory allocation)" << std::endl;
+
     // invalidate data handles
     _image = nullptr;
     _chatLogic = nullptr;
@@ -20,7 +25,7 @@ ChatBot::ChatBot()
 // constructor WITH memory allocation
 ChatBot::ChatBot(std::string filename)
 {
-    std::cout << "ChatBot Constructor" << std::endl;
+    std::cout << "In ChatBot Constructor (with memory allocation)" << std::endl;
     
     // invalidate data handles
     _chatLogic = nullptr;
@@ -32,7 +37,7 @@ ChatBot::ChatBot(std::string filename)
 
 ChatBot::~ChatBot()
 {
-    std::cout << "ChatBot Destructor" << std::endl;
+    std::cout << "In ChatBot Destructor" << std::endl;
 
     // deallocate heap memory
     if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
@@ -44,6 +49,95 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+
+// Copy constructor
+ChatBot::ChatBot(const ChatBot &source)
+{ 
+
+    if (source._image == NULL) // If source image is null
+    {
+        _image = NULL;
+    }
+    else 
+    {
+        _image = new wxBitmap(*(source._image)); // wxBitmap copy constuctor, load onto heap
+    }
+
+    _currentNode = source._currentNode;
+    _rootNode    = source._rootNode;
+    _chatLogic   = source._chatLogic;
+
+    std::cout << "Copying content of instance " << &source << " to instance "  << this << std::endl;
+}
+
+// Copy assignment
+ChatBot &ChatBot::operator=(const ChatBot &source)
+{
+    std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
+
+    if (this == &source) {
+        return *this;
+    }
+
+    if (_image != NULL) {
+        delete _image; // free the current image resource 
+    }
+
+    _image       = new wxBitmap(*(source._image)); // wxBitmap copy constuctor, load onto heap
+    _currentNode = source._currentNode;
+    _rootNode    = source._rootNode;
+    _chatLogic   = source._chatLogic;
+
+    return *this;
+}
+
+// Move constructor
+ChatBot::ChatBot(ChatBot &&source)
+{
+    std::cout << "Moving (constructor) instance " << &source << " to instance " << this << std::endl;
+
+    _image       = source._image;       // pointer to original image now points to the image of the rvalue
+    _currentNode = source._currentNode;
+    _rootNode    = source._rootNode;
+    _chatLogic   = source._chatLogic;
+
+    // invalidate data handles
+    source._image       = nullptr;
+    source._currentNode = nullptr;
+    source._rootNode    = nullptr;
+    source._chatLogic   = nullptr;
+
+}
+
+// Move assignment operator
+ChatBot &ChatBot::operator=(ChatBot &&source)
+{
+    std::cout << "Moving (assign) instance " << &source << " to instance " << this << std::endl;
+
+    if (this == &source) // self reference check 
+    {
+        return *this;            
+    }    
+
+    if (_image != NULL)
+    {
+        delete _image; // free current image resource
+    }
+
+    _image       = source._image;       // pointer to original image now points to the image of the rvalue
+    _currentNode = source._currentNode;
+    _rootNode    = source._rootNode;
+    _chatLogic   = source._chatLogic;
+
+    // invalidate data handles
+    source._image       = nullptr;
+    source._currentNode = nullptr;
+    source._rootNode    = nullptr;
+    source._chatLogic   = nullptr;
+
+    return *this;
+
+}
 
 ////
 //// EOF STUDENT CODE
@@ -93,8 +187,12 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
 
+    std::cout << "Before sending message in ChatBot::SetCurrentNode" << std::endl;
+
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
+
+    std::cout << "After sending message in ChatBot::SetCurrentNode" << std::endl;
 }
 
 int ChatBot::ComputeLevenshteinDistance(std::string s1, std::string s2)
