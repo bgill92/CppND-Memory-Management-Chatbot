@@ -154,7 +154,7 @@ ChatBotPanelDialog::~ChatBotPanelDialog()
 void ChatBotPanelDialog::AddDialogItem(wxString text, bool isFromUser)
 {
     // add a single dialog element to the sizer
-    std::cout << "In ChatBotPanelDialog::AddDialogItem" << std::endl;
+    // std::cout << "In ChatBotPanelDialog::AddDialogItem" << std::endl;
     ChatBotPanelDialogItem *item = new ChatBotPanelDialogItem(this, text, isFromUser);
     _dialogSizer->Add(item, 0, wxALL | (isFromUser == true ? wxALIGN_LEFT : wxALIGN_RIGHT), 8);
     _dialogSizer->Layout();
@@ -174,11 +174,11 @@ void ChatBotPanelDialog::AddDialogItem(wxString text, bool isFromUser)
 void ChatBotPanelDialog::PrintChatbotResponse(std::string response)
 {
 
-    std::cout << "In ChatBotPanelDialog::PrintChatbotResponse" << std::endl;
+    // std::cout << "In ChatBotPanelDialog::PrintChatbotResponse" << std::endl;
     // convert string into wxString and add dialog element
     wxString botText(response.c_str(), wxConvUTF8);
     AddDialogItem(botText, false);
-    std::cout << "In ChatBotPanelDialog::PrintChatbotResponse after" << std::endl;
+    // std::cout << "In ChatBotPanelDialog::PrintChatbotResponse after" << std::endl;
 }
 
 void ChatBotPanelDialog::paintEvent(wxPaintEvent &evt)
@@ -209,7 +209,7 @@ ChatBotPanelDialogItem::ChatBotPanelDialogItem(wxPanel *parent, wxString text, b
     : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(-1, -1), wxBORDER_NONE)
 {
     // retrieve image from chatbot
-    std::cout << "In ChatBotPanelDialogItem::ChatBotPanelDialogItem" << std::endl;
+    // std::cout << "In ChatBotPanelDialogItem::ChatBotPanelDialogItem" << std::endl;
     wxBitmap *bitmap = isFromUser == true ? nullptr : ((ChatBotPanelDialog*)parent)->GetChatLogicHandle()->GetImageFromChatbot();     
 
     // create image and text

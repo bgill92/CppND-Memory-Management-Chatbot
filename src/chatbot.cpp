@@ -43,6 +43,7 @@ ChatBot::~ChatBot()
     if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
     {
         delete _image;
+        std::cout << "Deleted an image" << std::endl;
         _image = NULL;
     }
 }
@@ -53,6 +54,8 @@ ChatBot::~ChatBot()
 // Copy constructor
 ChatBot::ChatBot(const ChatBot &source)
 { 
+
+    std::cout << "Copying content of instance " << &source << " to instance "  << this << std::endl;
 
     if (source._image == NULL) // If source image is null
     {
@@ -67,7 +70,6 @@ ChatBot::ChatBot(const ChatBot &source)
     _rootNode    = source._rootNode;
     _chatLogic   = source._chatLogic;
 
-    std::cout << "Copying content of instance " << &source << " to instance "  << this << std::endl;
 }
 
 // Copy assignment
@@ -187,12 +189,12 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
 
-    std::cout << "Before sending message in ChatBot::SetCurrentNode" << std::endl;
+    // std::cout << "Before sending message in ChatBot::SetCurrentNode" << std::endl;
 
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
 
-    std::cout << "After sending message in ChatBot::SetCurrentNode" << std::endl;
+    // std::cout << "After sending message in ChatBot::SetCurrentNode" << std::endl;
 }
 
 int ChatBot::ComputeLevenshteinDistance(std::string s1, std::string s2)

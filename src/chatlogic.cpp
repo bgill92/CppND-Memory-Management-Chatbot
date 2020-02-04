@@ -20,10 +20,10 @@ ChatLogic::ChatLogic()
     std::cout << "In ChatLogic Constructor" << std::endl;
 
     // create instance of chatbot
-    _chatBot = new ChatBot("../images/chatbot.png");
+    // _chatBot = new ChatBot("../images/chatbot.png");
 
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    _chatBot->SetChatLogicHandle(this);
+    // _chatBot->SetChatLogicHandle(this);
 
     ////
     //// EOF STUDENT CODE
@@ -37,7 +37,7 @@ ChatLogic::~ChatLogic()
     std::cout << "In ChatLogic Destructor" << std::endl;
 
     // delete chatbot instance
-    delete _chatBot;
+    // delete _chatBot;
 
     // delete all nodes
     // for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
@@ -224,11 +224,18 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     }    
 
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
-    std::cout << "In LoadAnswerGraphFromFile in between" << std::endl;
-    rootNode->MoveChatbotHere(_chatBot);
+    // _chatBot->SetRootNode(rootNode);
+    // rootNode->MoveChatbotHere(_chatBot);
 
-    std::cout << "In LoadAnswerGraphFromFile Line 227" << std::endl;
+    // Creating ChatBot object on stack
+    auto stackBot = ChatBot("../images/chatbot.png");
+
+    // Setting the root node for the object (rootNode is the raw pointer from a unique_ptr, does this cause ownership problems?)
+    stackBot.SetRootNode(rootNode);
+    stackBot.SetChatLogicHandle(this);
+
+    // Moving the ChatBot instance into the root node, along with the pointer to the ChatBot object owned by ChatLogic
+    rootNode->MoveChatbotHere(std::move(stackBot));
     
     ////
     //// EOF STUDENT CODE
@@ -251,12 +258,12 @@ void ChatLogic::SendMessageToChatbot(std::string message)
 
 void ChatLogic::SendMessageToUser(std::string message)
 {
-    std::cout << "In ChatLogic::SendMessageToUser"<< std::endl;
+    // std::cout << "In ChatLogic::SendMessageToUser"<< std::endl;
     _panelDialog->PrintChatbotResponse(message);
 }
 
 wxBitmap *ChatLogic::GetImageFromChatbot()
 {
-    std::cout << "In ChatLogic::GetImageFromChatbot" <<std::endl;
+    // std::cout << "In ChatLogic::GetImageFromChatbot" <<std::endl;
     return _chatBot->GetImageHandle();
 }
