@@ -45,18 +45,19 @@ void GraphNode::MoveChatbotHere(ChatBot &&chatbot)
 {
     _chatBot = ChatBot(std::move(chatbot));
     _chatBot.GetChatLogicHandle()->SetChatbotHandle(&_chatBot);
-    _chatBot.SetImageHandle(_chatBot.GetImageHandle());
+    // _chatBot.SetImageHandle(_chatBot.GetImageHandle()); // Set the image handle to the previous image handle
     _chatBot.SetCurrentNode(this);
 }
 
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)
 {
-    ChatBot chat_bot = ChatBot();
-    chat_bot.SetRootNode(_chatBot.GetRootNode());
-    chat_bot.SetChatLogicHandle(_chatBot.GetChatLogicHandle());
-    chat_bot.SetImageHandle(_chatBot.GetImageHandle());
-    newNode->MoveChatbotHere(std::move(chat_bot));    
-    _chatBot.SetImageHandle(nullptr); // invalidate pointer at source
+    ChatBot tempbot = ChatBot();
+    tempbot.SetRootNode(_chatBot.GetRootNode()); // Set the root node
+    tempbot.SetChatLogicHandle(_chatBot.GetChatLogicHandle());
+    tempbot.SetImageHandle(_chatBot.GetImageHandle());
+    newNode->MoveChatbotHere(std::move(tempbot));    
+
+    _chatBot.SetImageHandle(nullptr); // invalidate image pointer so only one node deletes the image in the end
 }
 ////
 //// EOF STUDENT CODE
